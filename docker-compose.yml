@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend/datasets:/app/datasets
+      - ./backend/models:/app/models
+      - ./backend/reports:/app/reports
+      - ./backend/diabetes_predictor.db:/app/diabetes_predictor.db
+    environment:
+      - FLASK_ENV=production
+      - JWT_SECRET_KEY=diabetes-prediction-system-super-secret-key-123
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
